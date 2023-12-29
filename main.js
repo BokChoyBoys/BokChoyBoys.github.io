@@ -7,17 +7,19 @@ function applyRotationToVector(offset, obj) {
     offset.add(obj.position);
     return offset;
 }
-function updateCamera(camera, obj) {
-    const newCameraPos = applyRotationToVector(new THREE.Vector3(0, 4, -13), obj);
-    const newCameraAngle = applyRotationToVector(new THREE.Vector3(0, 4, 0), obj);
-    camera.position.copy(newCameraPos);
-    camera.lookAt(newCameraAngle);
-
-    
-    /*camera.position.copy(obj.position);
-    camera.position.z += 10;
-    camera.position.y += 3;
-    */
+function updateCamera(camera, obj, toggle) {
+    if (toggle) {
+        const newCameraPos = applyRotationToVector(new THREE.Vector3(0, 2, -8), obj);
+        const newCameraAngle = applyRotationToVector(new THREE.Vector3(0, 1, 0), obj);
+        camera.position.copy(newCameraPos);
+        camera.lookAt(newCameraAngle);
+    } else {
+        const newCameraAngle = applyRotationToVector(new THREE.Vector3(0, 1, 0), obj);
+        camera.lookAt(newCameraAngle);
+        camera.position.copy(obj.position);
+        camera.position.z += 10;
+        camera.position.y += 3;
+    }
 }
 
 function movePlayer(obj) {
@@ -32,6 +34,12 @@ function movePlayer(obj) {
     }
     if (keyboard["d"]) { 
         obj.rotateY(-0.02);
+    }
+    if (keyboard["q"]) {
+        cameraToggle = false;
+    }
+    if (keyboard["e"]) {
+        cameraToggle = true;
     }
 }
 
@@ -59,7 +67,7 @@ function animate() {
     //updateCamera();
 	renderer.render( scene, camera );
     movePlayer(car);
-    updateCamera(camera, car);
+    updateCamera(camera, car, cameraToggle);
     /*if (!keyboard[2]) {
         updateCamera(camera, car);
     } else {
@@ -121,6 +129,8 @@ loader.load( 'assets/env.glb', function ( gltf ) {
 }, undefined, function ( error ) {
 	console.error( error );
 } );
+
+var cameraToggle = true;
 
 const ambient = new THREE.HemisphereLight(0xffffbb, 0x080820);
 scene.add(ambient);
