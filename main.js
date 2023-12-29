@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //import * as CANNON from "cannon";
 
 function applyRotationToVector(offset, obj) {
@@ -8,16 +9,16 @@ function applyRotationToVector(offset, obj) {
     return offset;
 }
 function updateCamera(camera, obj) {
-    /*const newCameraPos = applyRotationToVector(new THREE.Vector3(0, 5, -15), obj);
-    const newCameraAngle = applyRotationToVector(new THREE.Vector3(0, 5, 0), obj);
+    const newCameraPos = applyRotationToVector(new THREE.Vector3(0, 4, -13), obj);
+    const newCameraAngle = applyRotationToVector(new THREE.Vector3(0, 4, 0), obj);
     camera.position.copy(newCameraPos);
-    camera.lookAt(newCameraAngle);*/
+    camera.lookAt(newCameraAngle);
 
     
-    camera.position.copy(obj.position);
+    /*camera.position.copy(obj.position);
     camera.position.z += 10;
     camera.position.y += 3;
-    
+    */
 }
 
 function movePlayer(obj) {
@@ -28,10 +29,10 @@ function movePlayer(obj) {
         obj.translateZ(-1);
     }
     if (keyboard["a"]) {
-        obj.rotateY(0.04);
+        obj.rotateY(0.02);
     }
     if (keyboard["d"]) { 
-        obj.rotateY(-0.04);
+        obj.rotateY(-0.02);
     }
 }
 
@@ -42,6 +43,12 @@ function addKeysListener(){
     window.addEventListener('keyup', function(event){
       keyboard[event.key] = false;
     } , false);
+    /*window.addEventListener('mousedown', function(event){
+        keyboard[event.key] = true;
+    }, false);
+    window.addEventListener('mouseup', function(event){
+        keyboard[event.key] = false;
+    }, false);*/
   }
 
 function animate() {
@@ -50,11 +57,16 @@ function animate() {
 	//cube.rotation.x += 0.01;
 	//cube.rotation.y += 0.01;
     //updateCamera();
-    //controls.update();
     //updateCamera();
 	renderer.render( scene, camera );
     movePlayer(car);
     updateCamera(camera, car);
+    /*if (!keyboard[2]) {
+        updateCamera(camera, car);
+    } else {
+        controls.target.set(newCameraPos);
+        controls.update();
+    }*/
     //controls.update();
 }
 
@@ -72,33 +84,44 @@ document.body.appendChild( renderer.domElement );
 
 const geo = new THREE.PlaneGeometry(100, 100);
 const mat = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide });
-const plane = new THREE.Mesh(geo, mat);
-plane.rotateX( - Math.PI / 2);
+//const plane = new THREE.Mesh(geo, mat);
+//plane.rotateX( - Math.PI / 2);
+//plane.position.y = -2;
+//scene.add(plane);
 
-scene.add(plane);
-
-var grid = new THREE.GridHelper(100, 10);
-scene.add(grid);
+//var grid = new THREE.GridHelper(100, 10);
+//grid.position.y = -2;
+//scene.add(grid);
 
 camera.position.z = 10;
 camera.position.y = 5;
 
 const geometry = new THREE.BoxGeometry( 1, 1, 1 );
 const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-let car = new THREE.Mesh( geometry, material );
+let car;// = new THREE.Mesh( geometry, material );
 
 const loader = new GLTFLoader();
 //var car; 
 
 loader.load( 'assets/accord.glb', function ( gltf ) {
     car = gltf.scene;
+    car.position.z = 210;
+    car.position.x -= 70;
 	scene.add( gltf.scene );
 }, undefined, function ( error ) {
 	console.error( error );
 } );
 
-//car.position.y = 1;
 scene.add( car );
+
+var plane;
+loader.load( 'assets/env.glb', function ( gltf ) {
+    plane = gltf.scene;
+    plane.position.y -= 5;
+	scene.add( gltf.scene );
+}, undefined, function ( error ) {
+	console.error( error );
+} );
 
 const ambient = new THREE.HemisphereLight(0xffffbb, 0x080820);
 scene.add(ambient);
@@ -117,6 +140,6 @@ scene.add(light);
     else if (e.code == "ArrowRight")
         cube.position.x -= 1
 });*/
-scene.background = new THREE.Color( 0xFF21351 );
+scene.background = new THREE.Color( 0x6495ed );
 addKeysListener();
 animate();
