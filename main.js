@@ -8,17 +8,22 @@ function applyRotationToVector(offset, obj) {
     return offset;
 }
 function updateCamera(camera, obj, toggle) {
-    if (toggle) {
+    if (toggle == 0) {
         const newCameraPos = applyRotationToVector(new THREE.Vector3(0, 2, -8), obj);
         const newCameraAngle = applyRotationToVector(new THREE.Vector3(0, 1, 0), obj);
         camera.position.copy(newCameraPos);
         camera.lookAt(newCameraAngle);
-    } else {
+    } else if (toggle == 1) {
         const newCameraAngle = applyRotationToVector(new THREE.Vector3(0, 1, 0), obj);
         camera.lookAt(newCameraAngle);
         camera.position.copy(obj.position);
         camera.position.z += 10;
         camera.position.y += 3;
+    } else if (toggle == 2) {
+        camera.position.x = 10;
+        camera.position.y = 750;
+        camera.position.z = 70;
+        camera.lookAt(0, 0, 0);
     }
 }
 
@@ -36,10 +41,13 @@ function movePlayer(obj) {
         obj.rotateY(-0.02);
     }
     if (keyboard["q"]) {
-        cameraToggle = false;
+        cameraToggle = 0;
     }
     if (keyboard["e"]) {
-        cameraToggle = true;
+        cameraToggle = 1;
+    }
+    if (keyboard["r"]) {
+        cameraToggle = 2;
     }
 }
 
@@ -135,7 +143,7 @@ var cameraToggle = true;
 const ambient = new THREE.HemisphereLight(0xffffbb, 0x080820);
 scene.add(ambient);
 
-const light = new THREE.DirectionalLight(0xFFFFFF, 1);
+const light = new THREE.DirectionalLight(0xFFFFFF, 10);
 light.position.set( 1, 10, 6);
 scene.add(light);
 
