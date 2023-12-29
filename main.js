@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { randFloatSpread } from 'three/src/math/MathUtils';
 //import * as CANNON from "cannon";
 
 function applyRotationToVector(offset, obj) {
@@ -24,8 +25,23 @@ function updateCamera(camera, obj, toggle) {
         camera.position.y = 750;
         camera.position.z = 70;
         camera.lookAt(0, 0, 0);
+    } else if (toggle == 3) {
+        if (swing) {
+            cnt += 0.025;
+        } else {
+            cnt -= 0.025;
+        }
+        if (cnt < -10 || cnt > 10) {
+            swing = !swing
+        }
+        const newCameraPos = applyRotationToVector(new THREE.Vector3(-20, 15, cnt), obj);
+        const newCameraAngle = applyRotationToVector(new THREE.Vector3(0, 1, 0), obj);
+        camera.position.copy(newCameraPos);
+        camera.lookAt(newCameraAngle);
     }
 }
+var cnt = 0;
+var swing = true;
 
 function movePlayer(obj) {
     if (keyboard["w"]) {
@@ -48,6 +64,9 @@ function movePlayer(obj) {
     }
     if (keyboard["r"]) {
         cameraToggle = 2;
+    }
+    if (keyboard["f"]) {
+        cameraToggle = 3;
     }
 }
 
@@ -157,6 +176,6 @@ scene.add(light);
     else if (e.code == "ArrowRight")
         cube.position.x -= 1
 });*/
-scene.background = new THREE.Color( 0x6495ed );
+scene.background = new THREE.Color( 0x2f95ff );
 addKeysListener();
 animate();
