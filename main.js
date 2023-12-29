@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { randFloatSpread } from 'three/src/math/MathUtils';
 //import * as CANNON from "cannon";
 
 function applyRotationToVector(offset, obj) {
